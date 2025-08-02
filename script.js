@@ -20,8 +20,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const removeButton = document.createElement('button');
         removeButton.textContent = "Remove";
         removeButton.className = 'remove-btn';
-        removeButton.onclick = function () {
-            taskList.removeChild(li);
+        removeButton.onclick = function (event) {
+            event.stopPropagation(); //prevent toggling completion when removing
+           
+ taskList.removeChild(li);
         };
 
         // Append elements
