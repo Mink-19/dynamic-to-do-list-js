@@ -16,6 +16,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const li = document.createElement('li');
         li.textContent = taskText;
 
+        li.addEventListener("click" , function(){
+            li.classList.toggle("completed");
+
+        });
+
+        
+
         // Create remove button
         const removeButton = document.createElement('button');
         removeButton.textContent = "Remove";
@@ -42,6 +49,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Optional: Automatically add a task on load (as instructed)
-    addTask();  // This runs once when the page loads
+    //addTask();  // This runs once when the page loads
 });
 
