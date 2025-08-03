@@ -1,75 +1,71 @@
-document.addEventListener('DOMContentLoaded', () =>  {
+document.addEventListener('DOMContentLoaded', () => {
+    const addButton = document.getElementById('add-task-btn');
+    const taskInput = document.getElementById('task-input');
+    const taskList = document.getElementById('task-list');
 
-    const addButton = 
-    document.getElementById('add-task-btn');
-    const taskInput = 
-    document.getElementById('task-input');
-    const taskList =  
-    document.getElementById('task-list');
-
+    // Load tasks from localStorage
     loadTasks();
 
-    function loadTasks() 
-{
- //load tasks from local storage on page load
-    const storedTasks=
-    JSON.parse(localStorage.getItem('tasks') || '[]');
-    storedTasks.forEach(taskText => addTask(taskText, false)); //pass false to not create a new task element
-}
+    // Add task on button click
+    addButton.addEventListener('click', () => {
+        const taskText = taskInput.value.trim();
+        if (taskText !== "") {
+            addTask(taskText);
+            taskInput.value = "";
+        } else {
+            alert("Please enter a task.");
+        }
+    });
 
-   
+    // Add task on pressing Enter key
+    taskInput.addEventListener('keypress', (event) => {
+        if (event.key === 'Enter') {
+            const taskText = taskInput.value.trim();
+            if (taskText !== "") {
+                addTask(taskText);
+                taskInput.value = "";
+            } else {
+                alert("Please enter a task.");
+            }
+        }
+    });
 
-
-    function addTask( taskText, save = true) {
-
-        const li=
-        document.createElement('li');
+    // Add a task to the list and optionally save to localStorage
+    function addTask(taskText, save = true) {
+        const li = document.createElement('li');
         li.textContent = taskText;
 
-        const removeBtn=
-        document.createElement('button')
-        removeBtn.textContent = 'Remove';
+        const removeBtn = document.createElement('button');
+        removeBtn.textContent = "Remove";
         removeBtn.className = 'remove-btn';
-        removeBtn.onclick = function() {
-            taskList.removeChild(li);
-            //update local storage
-            const updatedTask =
-            JSON.parse(localStorage.getItem('tasks') || '[]')
-            .filter(task => task !== taskText);
-            localStorage.setItem('tasks' , JSON.stringify(updatedTasks));
 
+        removeBtn.onclick = () => {
+            taskList.removeChild(li);
+            removeFromStorage(taskText);
         };
+
         li.appendChild(removeBtn);
         taskList.appendChild(li);
 
-        if(save) {
-            const storedTasks =
-            JSON.parse(localStorage.getItem('tasks') || '[]');
-
+        if (save) {
+            const storedTasks = JSON.parse(localStorage.getItem('tasks') || '[]');
             storedTasks.push(taskText);
-            localStorage.setItem('tasks' , JSON.stringify(storedTasks));
+            localStorage.setItem('tasks', JSON.stringify(storedTasks));
         }
     }
 
-    addButton.addEventListener('click' , () =>
-    {
-        const taskText =
-        taskInput.value.trim();
-        if (taskText === "") {
-            alert("Please enter a task.");
-            return;
-        }
+    // Remove a task from localStorage
+    function removeFromStorage(taskText) {
+        const storedTasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+        const updatedTasks = storedTasks.filter(task => task !== taskText);
+        localStorage.setItem('tasks', JSON.stringify(updatedTasks));
+    }
 
-        addTask(taskText); // save = true
-        taskInput.value = '';
+    // Load tasks from localStorage
+    function loadTasks() {
+        const storedTasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+        storedTasks.forEach(taskText => addTask(taskText, false));
+    }
+});
 
-    });
-
-    taskInput.addEventListener('keypress' , function(event) {
-        if (event.key === 'Enter'){
-            addButton.click();
-        }
-    });
-    
-    });
         
